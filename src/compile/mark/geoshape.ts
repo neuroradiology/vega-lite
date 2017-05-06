@@ -1,8 +1,8 @@
 import {UnitModel} from '../unit';
 import * as mixins from './mixins';
 
-import {FieldDef, isFieldDef} from '../../fielddef';
-import {VgPostEncodingTransform} from '../../vega.schema';
+import {Field, FieldDef, isFieldDef} from '../../fielddef';
+import {VgGeoShapeTransform, VgPostEncodingTransform} from '../../vega.schema';
 import {MarkCompiler} from './base';
 
 export const geoshape: MarkCompiler = {
@@ -14,14 +14,14 @@ export const geoshape: MarkCompiler = {
       ...mixins.nonPosition('opacity', model)
     };
   },
-  postEncodingTransform: (model: UnitModel): VgPostEncodingTransform[] => {
+  postEncodingTransform: (model: UnitModel): VgGeoShapeTransform[] => {
     const {encoding} = model;
-    const field: FieldDef = encoding.shape && isFieldDef(encoding.shape) ? encoding.shape.field : undefined;
+    const field: FieldDef<Field> = encoding.shape && isFieldDef(encoding.shape) ? encoding.shape.field : undefined;
     return [{
       type: 'geoshape',
       projection: model.getName('projection'),
       as: 'shape',
       ...field ? {field: field} : {},
-    } as VgPostEncodingTransform];
+    } as VgGeoShapeTransform];
   }
 };
